@@ -249,6 +249,9 @@
 		if(wearer.stat)
 			wearer.balloon_alert(wearer, "Not conscious")
 			return
+		if(!HAS_TRAIT(wearer, VALI_TRAIT))
+			wearer.balloon_alert(wearer, "No harvester detected")
+			return
 	boost_on = !boost_on
 	SEND_SIGNAL(src, COMSIG_CHEMSYSTEM_TOGGLED, boost_on)
 	if(!boost_on)
@@ -355,6 +358,7 @@
 	if(connected_weapon)
 		wearer.balloon_alert(wearer, "Disconnected [connected_weapon]")
 		REMOVE_TRAIT(connected_weapon, TRAIT_NODROP, VALI_TRAIT)
+		REMOVE_TRAIT(wearer, VALI_TRAIT, VALI_TRAIT)
 		UnregisterSignal(connected_weapon, COMSIG_ITEM_ATTACK)
 		UnregisterSignal(connected_weapon, list(COMSIG_ITEM_EQUIPPED_NOT_IN_SLOT, COMSIG_ITEM_DROPPED))
 		connected_weapon = null
@@ -365,6 +369,7 @@
 
 	connected_weapon = weapon_to_connect
 	ADD_TRAIT(connected_weapon, TRAIT_NODROP, VALI_TRAIT)
+	ADD_TRAIT(wearer, VALI_TRAIT, VALI_TRAIT)
 	RegisterSignal(connected_weapon, COMSIG_ITEM_ATTACK, PROC_REF(drain_resource))
 	RegisterSignals(connected_weapon, list(COMSIG_ITEM_EQUIPPED_NOT_IN_SLOT, COMSIG_ITEM_DROPPED), PROC_REF(vali_connect))
 	return TRUE
